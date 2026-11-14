@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f8f1">
+<title>FOODVERSE | Intelligent Food Planner</title>
+<style>
+:root{--bg:#f4f8f1;--surface:#fff;--text:#18251b;--muted:#647267;--green:#238343;--green2:#e7f5e9;--line:#dce7dc;--orange:#ff9d42;--shadow:0 10px 30px #183b1b12}
+[data-theme=dark]{--bg:#101812;--surface:#1b281e;--text:#eaf3eb;--muted:#a6b6a8;--green:#72cf83;--green2:#263d2b;--line:#344638;--shadow:0 10px 30px #0004;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topin{max-width:1200px;margin:auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
+.brand{font-weight:900;font-size:1.28rem;letter-spacing:-.7px;white-space:nowrap}.brand span{color:var(--green)}
+.logo{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:13px;background:var(--green2);margin-right:8px}
+nav{display:flex;gap:5px;flex:1;flex-wrap:wrap}nav button,.ghost,.primary,.small{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:11px;padding:9px 13px}
+nav button.active,.primary{background:var(--green);border-color:var(--green);color:white}
+.topright{display:flex;gap:8px}.iconbtn{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text)}
+main{max-width:1200px;margin:auto;padding:24px 20px 70px}.view{display:none}.view.active{display:block}
+.hero{border-radius:24px;padding:30px;background:linear-gradient(115deg,#153f27,#287d46 60%,#83b85f);color:white;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;overflow:hidden;position:relative}
+.hero h1{font-size:clamp(2rem,4vw,3.3rem);line-height:1.08;margin:8px 0 12px;max-width:650px}.hero p{color:#e1f1e4;max-width:600px}.heroart{font-size:8rem;display:grid;place-items:center;filter:drop-shadow(0 15px 10px #0003)}
+.eyebrow{font-size:.76rem;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--green)}.hero .eyebrow{color:#c8f2cf}
+.hero .primary{background:#fff;color:#19552d;border-color:#fff;font-weight:800}
+.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 14px}.sectionhead h2{margin:0;font-size:1.45rem}.muted{color:var(--muted)}.small{padding:7px 10px;font-size:.88rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat,.panel,.foodcard,.recipebox{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--shadow)}
+.stat strong{font-size:1.45rem;display:block}.stat span{color:var(--muted);font-size:.86rem}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.foodcard{padding:0;overflow:hidden;display:flex;flex-direction:column}.foodimg{width:100%;height:205px;object-fit:cover;background:var(--green2);display:block;transition:transform .35s}.foodcard:hover .foodimg{transform:scale(1.025)}#categoryChips{gap:8px}#categoryChips button{border-radius:24px;background:var(--surface)}.foodbody{padding:14px;display:flex;flex-direction:column;flex:1}.foodbody h3{margin:0 0 4px;font-size:1.05rem}.foodbody p{margin:4px 0;color:var(--muted);font-size:.9rem}.tags{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}.tag{font-size:.75rem;background:var(--green2);color:var(--green);padding:3px 9px;border-radius:20px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px}.actions button{flex:1}
+.primary,.ghost{padding:10px 13px;border-radius:10px;font-weight:700}.primary:hover{filter:brightness(.95)}.ghost:hover,.small:hover{border-color:var(--green)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:14px 0}.field{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 12px;color:var(--text);min-height:43px}.search{min-width:230px;flex:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel h3{margin:0 0 10px}.panel p{color:var(--muted)}textarea.field{width:100%;min-height:105px;resize:vertical}
+.result{margin-top:16px}.recipebox{margin-top:14px}.recipebox h3{margin-top:0}.recipebox img{width:100%;max-height:260px;object-fit:cover;border-radius:12px}
+.nutri{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.nutri div{background:var(--green2);border-radius:12px;padding:10px}.nutri b{display:block;font-size:1.1rem}.nutri span{font-size:.78rem;color:var(--muted)}
+.price{background:#fff5e9;color:#70400f;padding:10px 12px;border-radius:11px;font-size:.9rem;margin:10px 0}.darkprice{background:var(--green2);color:var(--text)}
+.listrow{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:11px 0}.listrow:last-child{border:0}
+.empty{text-align:center;padding:40px 15px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:16px}
+footer{text-align:center;color:var(--muted);padding:25px;font-size:.85rem}
+dialog{border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--text);width:min(700px,calc(100% - 24px));max-height:88vh;padding:22px;box-shadow:0 30px 90px #0005}dialog::backdrop{background:#09130bb0}
+.close{float:right}.notice{font-size:.82rem;color:var(--muted);margin-top:12px}.loading{padding:24px;text-align:center;color:var(--muted)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topin{flex-wrap:wrap}.topright{margin-left:auto}nav{order:3;flex-basis:100%}.hero{grid-template-columns:1fr}.heroart{display:none}}
+@media(max-width:560px){main{padding:16px 12px 50px}.topin{padding:10px 12px}.grid,.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}.foodimg{height:205px}.nutri{grid-template-columns:repeat(2,1fr)}nav{overflow-x:auto;flex-wrap:nowrap}nav button{white-space:nowrap}}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:90vw}#toast.show{opacity:1;transform:translate(-50%,0)}
+#backbar{max-width:1200px;margin:10px auto 0;padding:0 20px}#backbar[hidden]{display:none}.badge{background:var(--orange);color:#000;border-radius:10px;padding:0 6px;font-size:.75rem;margin-left:5px}.badge:empty{display:none}
+dialog .small{padding:5px 8px;font-size:.8rem}.actions button{min-width:90px}
+.artbox{display:grid;place-items:center;background:var(--green2)}.dimg{width:100%;height:240px;object-fit:cover;border-radius:12px;display:block;background:var(--green2)}.foodimg.artbox svg{height:150px;width:auto}.dimg.artbox svg{height:170px;width:auto}
+</style>
+</head>
+<body>
+<div class="top"><div class="topin">
+  <div class="brand" style="cursor:pointer" onclick="showView('home')"><span class="logo">🥗</span>FOOD<span>VERSE</span></div>
+  <nav id="nav">
+    <button class="active" data-view="home">Home</button><button data-view="discover">Discover</button><button data-view="planner">Meal Planner</button><button data-view="maker">New Food Maker</button><button data-view="compare">Price Compare</button><button data-view="health">Health</button><button data-view="favs">Favourites</button><button data-view="cart">Grocery Cart<span class="badge" id="cartN"></span></button>
+  </nav>
+  <div class="topright"><button class="iconbtn" id="themeBtn" title="Toggle theme">☾</button></div>
+</div></div>
+<div id="backbar" hidden><button class="ghost" onclick="goBack()">← Back</button></div>
+<main>
+<section class="view active" id="home">
+ <div class="hero"><div><div class="eyebrow">Plan better · Eat smarter · Save more</div><h1>Your food. Your kitchen. Your choices.</h1><p>Discover recipes, plan meals, use ingredients already at home, understand macronutrients and compare the cost of cooking with ordering.</p><button class="primary" onclick="showView('discover')">Explore recipes →</button> <button class="ghost" onclick="showView('maker')">What's in my kitchen?</button></div><div class="heroart">🍲🥑</div></div>
+ <div class="stats"><div class="stat"><strong id="recipeCount">8+</strong><span>Starter recipes + online catalogue</span></div><div class="stat"><strong>4</strong><span>Macro nutrition values</span></div><div class="stat"><strong>₹</strong><span>Home vs online price estimates</span></div><div class="stat"><strong>∞</strong><span>Explore more recipes</span></div></div>
+ <div class="sectionhead"><div><div class="eyebrow">Handpicked</div><h2>Popular food ideas</h2></div><button class="small" onclick="showView('discover')">View all recipes →</button></div>
+ <div class="grid" id="featured"></div>
+ <div class="notice">Recipe images and online recipes are loaded from TheMealDB free public API when internet is available. Sample nutrition and prices are estimates.</div>
+</section>
+
+<section class="view" id="discover">
+ <div class="sectionhead"><div><div class="eyebrow">Food library</div><h2>Discover recipes</h2><p class="muted">Browse real food photographs across many categories and world cuisines. Search by dish, category or cuisine.</p></div></div>
+ <div class="toolbar"><input class="field search" id="searchBox" placeholder="Search food (e.g. pasta, chicken, dosa)"><select class="field" id="category"><option value="">All categories</option><option>Beef</option><option>Breakfast</option><option>Chicken</option><option>Dessert</option><option>Goat</option><option>Lamb</option><option>Miscellaneous</option><option>Pasta</option><option>Pork</option><option>Seafood</option><option>Side</option><option>Starter</option><option>Vegan</option><option>Vegetarian</option></select><select class="field" id="cuisine"><option value="">All cuisines</option><option>American</option><option>British</option><option>Chinese</option><option>French</option><option>Indian</option><option>Italian</option><option>Japanese</option><option>Mexican</option><option>Thai</option><option>Turkish</option></select><button class="primary" id="searchBtn">Search</button><button class="ghost" id="allBtn">Browse all</button></div>
+ <div class="toolbar" id="categoryChips" aria-label="Popular food categories"><button class="small" data-cat="">All foods</button><button class="small" data-cat="Vegetarian">🥗 Vegetarian</button><button class="small" data-cat="Vegan">🌱 Vegan</button><button class="small" data-cat="Chicken">🍗 Chicken</button><button class="small" data-cat="Seafood">🐟 Seafood</button><button class="small" data-cat="Dessert">🍰 Desserts</button><button class="small" data-cat="Pasta">🍝 Pasta</button><button class="small" data-cat="Breakfast">🍳 Breakfast</button><button class="small" data-cat="Beef">🥩 Beef</button><button class="small" data-cat="Starter">🥟 Starters</button></div>
+ <div class="grid" id="discoverGrid"></div><div class="toolbar" style="justify-content:center"><button class="primary" id="loadMore">Load more recipes ↓</button></div>
+ <p class="notice" id="apiStatus">Online catalogue connects to TheMealDB. Results depend on internet/API availability.</p>
+</section>
+
+<section class="view" id="planner">
+ <div class="sectionhead"><div><div class="eyebrow">Your daily routine</div><h2>Smart meal planner</h2><p class="muted">Generate a simple breakfast, lunch, snack and dinner plan.</p></div></div>
+ <div class="panel"><div class="toolbar"><label>Food preference <select class="field" id="diet"><option value="all">All foods</option><option value="veg">Vegetarian</option><option value="vegan">Vegan</option><option value="nonveg">Non-vegetarian</option></select></label><label>Daily calorie preference <select class="field" id="calorie"><option value="any">No filter</option><option value="light">Lighter meals</option></select></label><button class="primary" id="makePlan">Generate my plan</button></div><div id="planOutput" class="result"><div class="empty">Choose your preference and generate a meal plan.</div></div></div>
+</section>
+
+<section class="view" id="maker">
+ <div class="sectionhead"><div><div class="eyebrow">Use what you already have</div><h2>New Food Maker</h2><p class="muted">Enter ingredients available at home. FOODVERSE matches them with recipes and suggests what you can cook.</p></div></div>
+ <div class="panel"><label for="ingredients"><b>Your available ingredients</b></label><textarea class="field" id="ingredients" placeholder="Example: rice, tomato, onion, egg, potato, milk, bread"></textarea>
+ <div class="toolbar"><label><input type="checkbox" id="healthyOnly"> Prefer lighter recipe ideas</label><button class="primary" id="createFood">Find foods I can make</button></div><p class="notice">The ingredient matcher checks the starter recipes first. You can also search online recipes for more ideas. Always check the full recipe and food safety instructions.</p></div>
+ <div id="makerOutput" class="result"></div>
+</section>
+
+<section class="view" id="compare">
+ <div class="sectionhead"><div><div class="eyebrow">Make an informed choice</div><h2>Home cooking vs ordering</h2><p class="muted">Compare estimated home ingredient cost with sample online prices.</p></div></div>
+ <div class="panel"><div class="toolbar"><select class="field" id="compareFood"></select><label>Online price (₹) <input class="field" type="number" min="0" id="onlinePrice" value="180" style="width:115px"></label><button class="primary" id="compareBtn">Compare prices</button></div><div id="compareOutput"></div></div>
+</section>
+
+<section class="view" id="cart">
+ <div class="sectionhead"><div><div class="eyebrow">Shopping assistant</div><h2>Your grocery cart</h2><p class="muted">Collect ingredients for recipes you want to cook at home.</p></div><button class="ghost" id="clearCart">Clear cart</button></div>
+ <div class="panel" id="cartOutput"></div>
+ <p class="notice">Use the buttons beside each item to open that exact item on Blinkit, Zepto, Instamart or BigBasket.</p>
+</section>
+<section class="view" id="health"><div class="sectionhead"><div><div class="eyebrow">Know your numbers</div><h2>Calorie &amp; macro calculator</h2><p class="muted">Estimate daily calories and macronutrients for your goal.</p></div></div>
+<div class="panel"><div class="toolbar"><label>Age <input class="field" type="number" id="hAge" min="5" max="110" value="21" style="width:90px"></label><label>Gender <select class="field" id="hG"><option value="m">Male</option><option value="f">Female</option></select></label><label>Height cm <input class="field" type="number" id="hH" min="80" max="250" value="170" style="width:100px"></label><label>Weight kg <input class="field" type="number" id="hW" min="15" max="300" value="65" style="width:100px"></label></div>
+<div class="toolbar"><label>Activity <select class="field" id="hA"><option value="1.2">Mostly sitting</option><option value="1.375" selected>Light exercise</option><option value="1.55">Moderate exercise</option><option value="1.725">Very active</option></select></label><label>Goal <select class="field" id="hGoal"><option value="lose">Lose weight</option><option value="keep" selected>Maintain</option><option value="gain">Gain weight</option></select></label><button class="primary" id="hBtn">Calculate</button></div><div id="hOut" class="result"></div></div></section>
+<section class="view" id="favs"><div class="sectionhead"><div><div class="eyebrow">Saved</div><h2>Your favourites</h2></div></div><div class="grid" id="favGrid"></div></section>
+</main>
+<footer>FOODVERSE · Intelligent Food Planner · Educational project demo</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="recipeDialog"><button class="iconbtn close" id="closeDialog">✕</button><div id="recipeDetails"></div></dialog>
+<script>
+const $=id=>document.getElementById(id);
+const starter=[
+ {id:'s1',name:'Idli Sambar',meal:'Breakfast',diet:'vegan',ingredients:['idli batter','toor dal','tomato','onion','sambar powder'],qty:['250 g','50 g','1','1','1 tsp'],steps:['Steam idli batter in greased moulds for about 10–12 minutes.','Pressure-cook toor dal with tomato, onion, turmeric and water until soft.','Add sambar powder and simmer for 5 minutes.','Serve hot idlis with sambar.'],kcal:320,protein:10,carbs:60,fat:4,home:41,online:90,img:''},
+ {id:'s2',name:'Vegetable Poha',meal:'Breakfast',diet:'vegan',ingredients:['poha','onion','peanuts','potato','lemon'],qty:['100 g','1','20 g','1','½'],steps:['Rinse poha briefly and drain.','Roast peanuts; sauté onion and diced potato until soft.','Add turmeric, salt and poha; toss gently for 3 minutes.','Finish with lemon juice and serve.'],kcal:280,protein:7,carbs:48,fat:8,home:28,online:80,img:''},
+ {id:'s3',name:'Egg Omelette Toast',meal:'Breakfast',diet:'nonveg',ingredients:['egg','onion','bread','green chilli'],qty:['3','1','2 slices','1'],steps:['Beat eggs with chopped onion, chilli and a little salt.','Pour into a lightly oiled pan and cook until set; flip carefully.','Toast bread and serve with the omelette.'],kcal:350,protein:22,carbs:22,fat:18,home:39,online:110,img:''},
+ {id:'s4',name:'Dal Rice',meal:'Lunch',diet:'veg',ingredients:['rice','toor dal','tomato','onion','ghee'],qty:['100 g','60 g','1','1','1 tsp'],steps:['Cook rice until fluffy.','Pressure-cook dal with tomato, turmeric and salt.','Temper cumin and onion in a little ghee; add to dal.','Serve dal with rice.'],kcal:450,protein:16,carbs:75,fat:8,home:28,online:140,img:''},
+ {id:'s5',name:'Chicken Curry Rice',meal:'Lunch',diet:'nonveg',ingredients:['chicken','onion','tomato','rice','curry masala'],qty:['200 g','2','2','100 g','1 tbsp'],steps:['Sauté onion and tomato with spices until soft.','Add chicken and masala; cook covered until chicken reaches a safe internal temperature.','Cook rice separately.','Serve chicken curry with rice.'],kcal:620,protein:42,carbs:65,fat:20,home:93,online:260,img:''},
+ {id:'s6',name:'Paneer Wrap',meal:'Lunch',diet:'veg',ingredients:['paneer','chapati','onion','capsicum','curd'],qty:['100 g','2','1','1','2 tbsp'],steps:['Sauté onion and capsicum.','Add paneer cubes and spices; cook until heated through.','Mix curd with herbs for a quick sauce.','Fill warm chapatis, roll and serve.'],kcal:420,protein:20,carbs:38,fat:20,home:65,online:190,img:''},
+ {id:'s7',name:'Chickpea Salad',meal:'Snack',diet:'vegan',ingredients:['chickpeas','cucumber','tomato','onion','lemon'],qty:['100 g','1','1','1','½'],steps:['Cook soaked chickpeas until tender and drain.','Chop cucumber, tomato and onion.','Toss with chickpeas, lemon juice, salt and pepper.','Chill briefly and serve.'],kcal:260,protein:12,carbs:38,fat:6,home:31,online:150,img:''},
+ {id:'s8',name:'Banana Oats Smoothie',meal:'Breakfast',diet:'veg',ingredients:['oats','banana','milk','honey'],qty:['40 g','1','200 ml','1 tsp'],steps:['Add oats and milk to a blender.','Add banana and honey.','Blend until smooth.','Serve chilled.'],kcal:330,protein:12,carbs:58,fat:6,home:31,online:130,img:''}
+];
+
+const V=['home','discover','planner','maker','compare','health','favs','cart'];
+const FB='https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg',API='https://www.themealdb.com/api/json/v1/1/';
+const ls={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const q=encodeURIComponent,esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim();
+const store={};starter.forEach(r=>store[r.id]=r);
+let cart=ls.get('fv_cart',{}),favs=ls.get('fv_favs',[]),city=ls.get('fv_city',''),shown=[...starter],loaded=false,letterIndex=0,loadingMore=false,lastIn=[];
+favs.forEach(f=>{if(f&&f.id&&!store[f.id])store[f.id]=Object.assign({ingredients:[],qty:[],steps:[]},f)});
+function toast(m){const t=$('toast');t.textContent=m;t.className='show';clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600)}
+const L={swiggy:n=>`https://www.swiggy.com/search?query=${q(n)}`,maps:n=>`https://www.google.com/maps/search/${q(n+' restaurant near me')}`,blinkit:n=>`https://blinkit.com/s/?q=${q(n)}`,zepto:n=>`https://www.zeptonow.com/search?query=${q(n)}`,insta:n=>`https://www.swiggy.com/instamart/search?custom_back=true&query=${q(n)}`,bigbasket:n=>`https://www.bigbasket.com/ps/?q=${q(n)}&nc=as`};
+function go(k,n){let u;if(k==='zomato'){const c=norm(city).replace(/ +/g,'-');u=c?`https://www.zomato.com/${c}/restaurants?q=${q(n)}`:'https://www.zomato.com/';if(!c)toast('Enter your city for exact Zomato results')}else u=L[k](n);const e=document.createElement('a');e.href=u;e.target='_blank';e.rel='noopener noreferrer';document.body.appendChild(e);e.click();e.remove()}
+const pb=(k,t,n,c='small')=>`<button class="${c}" data-n="${esc(n)}" onclick="go('${k}',this.dataset.n)">${t} ↗</button>`;
+function setCity(v){city=v;ls.set('fv_city',v)}
+const isFav=id=>favs.some(f=>f.id===id);
+function showView(id){if(location.hash.slice(1)===id)route();else location.hash=id}
+function goBack(){if(history.length>1)history.back();else showView('home')}
+function route(){let id=location.hash.slice(1);if(!V.includes(id))id='home';
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+ $('backbar').hidden=id==='home';window.scrollTo(0,0);
+ if(id==='cart')renderCart();if(id==='compare')fillCompare();if(id==='favs')renderFavs();
+ if(id==='discover'&&!loaded){loaded=true;searchOnline('')}}
+const art=n=>{const P='<ellipse cx="100" cy="62" rx="82" ry="42" fill="#fff" stroke="#d9d9d9" stroke-width="3"/><ellipse cx="100" cy="62" rx="64" ry="31" fill="#f4f4f4"/>',c=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`,e=(x,y,a,b,f,s="none")=>`<ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" fill="${f}" stroke="${s}"/>`;
+const D={
+"Idli Sambar":e(70,52,19,12,"#f6efd6","#e2d7b0")+e(100,46,19,12,"#f6efd6","#e2d7b0")+e(130,52,19,12,"#f6efd6","#e2d7b0")+e(100,76,34,11,"#d9822b")+c(88,75,3,"#6b8e23")+c(110,77,3,"#c0392b")+c(100,73,2,"#6b8e23"),
+"Veg Poha":e(100,60,46,24,"#f0d34a")+c(80,52,4,"#a0652d")+c(105,48,4,"#a0652d")+c(122,62,4,"#a0652d")+c(90,68,3,"#3c9d3c")+c(112,70,3,"#3c9d3c")+c(70,64,3,"#3c9d3c")+'<path d="M140 80a14 14 0 0 1 26 0z" fill="#d4e157"/>',
+"Egg Omelette Toast":e(78,60,40,24,"#ffd54f","#f0b429")+'<path d="M45 60q33-22 66 0" stroke="#fff3b0" stroke-width="4" fill="none"/><rect x="128" y="38" width="34" height="34" rx="6" fill="#d9a066"/><rect x="133" y="43" width="24" height="24" rx="4" fill="#f1cf94"/>'+c(70,56,3,"#6aa84f"),
+"Dal Rice":e(72,62,34,24,"#fff","#ddd")+c(60,56,2,"#ccc")+c(80,66,2,"#ccc")+c(130,60,26,"#e0a030")+'<path d="M112 60q18-14 36 0" stroke="#b9770e" stroke-width="3" fill="none"/>'+c(130,60,3,"#7b3f00"),
+"Chicken Curry Rice":e(68,62,32,24,"#fff","#ddd")+c(130,60,28,"#b5542a")+c(120,52,8,"#e8b27a")+c(138,56,8,"#e8b27a")+c(128,70,8,"#e8b27a")+c(145,68,3,"#6aa84f"),
+"Paneer Wrap":'<rect x="40" y="42" width="120" height="38" rx="19" fill="#e3b46f" transform="rotate(-8 100 60)"/><circle cx="146" cy="56" r="17" fill="#f3d9a4" transform="rotate(-8 100 60)"/><rect x="136" y="48" width="9" height="9" fill="#fffbe6"/><rect x="146" y="54" width="9" height="9" fill="#fffbe6"/><rect x="138" y="60" width="8" height="8" fill="#6aa84f"/>',
+"Chickpea Salad":e(100,60,52,28,"#8bc34a")+c(75,55,6,"#e0b24f")+c(95,50,6,"#e0b24f")+c(118,58,6,"#e0b24f")+c(85,70,6,"#e0b24f")+c(108,72,6,"#e0b24f")+c(70,68,7,"#e53935")+c(125,46,7,"#e53935")+c(100,62,8,"#c5e1a5")+c(135,68,8,"#c5e1a5"),
+"Banana Oats Smoothie":'<path d="M72 22h56l-8 76H80z" fill="#f3e2a0" stroke="#d8c680" stroke-width="3"/><rect x="108" y="6" width="5" height="50" rx="2" fill="#ef5350"/>'+c(160,86,13,"#ffe082")+c(160,86,6,"#ffd54f")+c(40,88,13,"#ffe082")+c(40,88,6,"#ffd54f")};
+return `<svg viewBox="0 0 200 110" height="104" aria-hidden="true">${n=="Banana Oats Smoothie"?"":P}${D[n]||""}</svg>`};
+
+const IMGQ={s1:['Idli','Idli sambar'],s2:['Poha','Poha'],s3:['Omelette','Omelette'],s4:['Dal','Dal'],s5:['Chicken_curry','Chicken Handi'],s6:['Paneer','Paneer'],s7:['Chickpea','Chickpea salad'],s8:['Smoothie','Smoothie']};
+starter.forEach(r=>{r.img='';r.wq=IMGQ[r.id][0];r.mq=IMGQ[r.id][1]});
+const IC=ls.get('fv_img',{}),PR={};
+const wikiImg=r=>fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+q(r.wq)).then(x=>x.json()).then(j=>j.thumbnail&&j.thumbnail.source);
+const mdbImg=r=>fetch(API+'search.php?s='+q(r.mq)).then(x=>x.json()).then(j=>j.meals&&j.meals[0]&&j.meals[0].strMealThumb);
+function resolveImg(r){if(IC[r.id])return Promise.resolve(IC[r.id]);return PR[r.id]||(PR[r.id]=(async()=>{for(const f of [wikiImg,mdbImg]){try{const u=await f(r);if(u){IC[r.id]=u;ls.set('fv_img',IC);return u}}catch(e){}}return null})())}
+const imgTag=(r,c)=>{const s=r.img||IC[r.id]||'';return `<img class="${c}" ${s?`src="${esc(s)}" `:''}alt="${esc(r.name)}" data-r="${esc(r.id)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="imgFail(this)">`};
+function imgFail(im){if(!im.parentNode)return;const r=store[im.dataset.r]||{name:im.alt||''};const d=document.createElement('div');d.className=im.className+' artbox';d.setAttribute('role','img');d.setAttribute('aria-label',r.name);d.innerHTML=art(String(r.name).replace('Vegetable','Veg'));im.replaceWith(d)}
+function hydrate(){document.querySelectorAll('img[data-r]:not([src])').forEach(async im=>{if(im.dataset.p)return;im.dataset.p=1;const r=store[im.dataset.r];const u=r?await resolveImg(r):null;if(u)im.src=u;else imgFail(im)})}
+new MutationObserver(hydrate).observe(document.body,{childList:true,subtree:true});
+function idea(){const P=['egg','paneer','chicken','dal','chickpea','tofu','fish','rajma','bean','curd','milk','lentil','soya'],C=['rice','roti','chapati','bread','oats','poha','potato','pasta','noodle','corn'];
+ const pr=lastIn.filter(x=>P.some(p=>x.includes(p))),cb=lastIn.filter(x=>C.some(c=>x.includes(c))),vg=lastIn.filter(x=>!pr.includes(x)&&!cb.includes(x));
+ const name=pr[0]&&cb[0]?`Healthy ${pr[0]} ${cb[0]} bowl`:pr[0]?`Healthy ${pr[0]} vegetable stir-fry`:cb[0]?`Veggie ${cb[0]} bowl`:'Mixed vegetable stir-fry';
+ return `<div class="panel" style="margin-top:14px"><div class="eyebrow">New healthy food from your ingredients</div><h3>${esc(name)}</h3><p class="muted">Uses only: ${lastIn.map(esc).join(', ')}</p><ol><li>${vg.length?`Chop ${vg.map(esc).join(', ')} and saute in 1 tsp oil with cumin, salt and turmeric`:'Heat 1 tsp oil with cumin, salt and turmeric'}.</li><li>${pr.length?`Add ${pr.map(esc).join(', ')} and cook until fully done`:'Add a little water and simmer 5 minutes'}.</li><li>${cb.length?`Serve with a small portion of ${cb.map(esc).join(', ')}`:'Serve as a light bowl or salad'}.</li><li>Finish with lemon or pepper. Keep oil low and skip added sugar.</li></ol><p class="notice">General suggestion. Cook meat, fish and eggs fully.</p></div>`}
+function foodCard(r){return `<article class="foodcard">${imgTag(r,'foodimg')}<div class="foodbody"><h3>${esc(r.name)}</h3><p>${esc(r.meal||'Recipe')} · ${esc(r.diet||'Explore')}</p><div class="tags"><span class="tag">${r.kcal?esc(r.kcal)+' kcal':'Recipe'}</span>${r.protein?`<span class="tag">${r.protein}g protein</span>`:''}<span class="tag">${r.mealId?'Online recipe':'Home recipe'}</span></div><div class="actions"><button class="primary" onclick="openRecipe('${esc(r.id)}')">View recipe</button><button class="ghost" onclick="openRecipe('${esc(r.id)}','order')">🛵 Order</button><button class="ghost" onclick="addRecipe('${esc(r.id)}')">＋ Cart</button><button class="ghost" aria-label="Favourite" onclick="toggleFav('${esc(r.id)}',this)">${isFav(r.id)?'♥':'♡'}</button></div></div></article>`}
+const renderFeatured=()=>{$('featured').innerHTML=starter.slice(0,3).map(foodCard).join('');$('recipeCount').textContent=shown.length+'+'};
+const renderDiscover=list=>{shown=list;$('discoverGrid').innerHTML=list.length?list.map(foodCard).join(''):'<div class="empty">No matching recipes found. Try another search.</div>';$('recipeCount').textContent=list.length+'+'};
+function renderFavs(){$('favGrid').innerHTML=favs.length?favs.map(f=>foodCard(store[f.id]||f)).join(''):'<div class="empty" style="grid-column:1/-1">No favourites yet. Tap ♡ on any recipe.</div>'}
+function toggleFav(id,btn){const r=store[id];if(!r)return;if(isFav(id))favs=favs.filter(f=>f.id!==id);else favs.push({id:r.id,name:r.name,img:r.img,mealId:r.mealId,meal:r.meal,diet:r.diet,kcal:r.kcal,protein:r.protein,carbs:r.carbs,fat:r.fat,home:r.home,online:r.online});ls.set('fv_favs',favs);if(btn)btn.textContent=isFav(id)?'♥':'♡';toast(isFav(id)?'Saved to favourites':'Removed from favourites');if(location.hash==='#favs')renderFavs()}
+const mealToRecipe=m=>{const r={id:'api-'+m.idMeal,mealId:m.idMeal,name:m.strMeal,meal:m.strCategory||'Online recipe',diet:'Explore',img:m.strMealThumb,ingredients:[],qty:[],steps:[]};store[r.id]=r;return r};
+function ensure(r){if(!r.mealId||r.ingredients.length)return Promise.resolve(r);
+ return fetch(`${API}lookup.php?i=${r.mealId}`).then(x=>{if(!x.ok)throw 0;return x.json()}).then(d=>{const m=d.meals&&d.meals[0];if(!m)throw 0;
+  for(let i=1;i<=20;i++){const n=(m['strIngredient'+i]||'').trim(),a=(m['strMeasure'+i]||'').trim();if(n){r.ingredients.push(n);r.qty.push(a||'As needed')}}
+  r.steps=(m.strInstructions||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);r.meal=m.strCategory||r.meal;return r})}
+const dlg=()=>$('recipeDialog');
+function openDlg(html){$('recipeDetails').innerHTML=html;if(!dlg().open){dlg().showModal();history.pushState({d:1},'')}}
+async function openRecipe(id,focus){const r=store[id];if(!r)return;openDlg('<div class="loading">Loading recipe…</div>');
+ try{await ensure(r)}catch(e){$('recipeDetails').innerHTML='<p>Could not load this recipe. Check your internet connection and try again.</p><button class="ghost" onclick="dlg().close()">← Back</button>';return}
+ const rows=r.ingredients.map((x,i)=>`<div class="listrow"><div>${esc(r.qty[i]||'As needed')} <b>${esc(x)}</b></div><div class="toolbar" style="margin:0;gap:5px">${pb('blinkit','Blinkit',x)}${pb('zepto','Zepto',x)}${pb('insta','Instamart',x)}${pb('bigbasket','BigBasket',x)}</div></div>`).join('');
+ $('recipeDetails').innerHTML=`<div class="eyebrow">${r.mealId?'Online recipe · TheMealDB':'FOODVERSE recipe'}</div><h2>${esc(r.name)}</h2>${imgTag(r,'dimg')}
+${r.kcal?`<div class="nutri" style="margin-top:12px"><div><b>${r.kcal}</b><span>Calories kcal</span></div><div><b>${r.protein}g</b><span>Protein</span></div><div><b>${r.carbs}g</b><span>Carbs</span></div><div><b>${r.fat}g</b><span>Fat</span></div></div>`:''}
+${r.home?`<p class="price darkprice">Home ingredients about ₹${r.home} vs online about ₹${r.online}. You could save about ₹${Math.max(0,r.online-r.home)}.</p>`:''}
+<div class="panel" id="orderBox" style="margin:12px 0"><h3>🛵 Order "${esc(r.name)}" online</h3><div class="toolbar">${pb('swiggy','Swiggy',r.name,'primary')}${pb('zomato','Zomato',r.name,'primary')}${pb('maps','Nearby hotels',r.name,'primary')}</div><label class="muted">Your city (for Zomato) <input class="field" value="${esc(city)}" placeholder="e.g. chennai" oninput="setCity(this.value)"></label><p class="notice">Each button opens that app's search for this exact dish. Prices, restaurants and delivery are shown by the app.</p></div>
+<h3>Cook at home – ingredients <span class="muted" style="font-size:.8rem">(buy the exact item)</span></h3>${rows||'<p class="muted">No ingredient list available.</p>'}
+<h3>Cooking steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+<div class="toolbar"><button class="primary" onclick="addRecipe('${esc(r.id)}')">Add ingredients to cart</button><button class="ghost" onclick="toggleFav('${esc(r.id)}',this)">${isFav(r.id)?'♥':'♡'} Favourite</button><button class="ghost" onclick="dlg().close()">← Back</button></div><p class="notice">Nutrition and prices are estimates and vary by ingredients and location.</p>`;
+ if(focus==='order')$('orderBox').scrollIntoView()}
+async function addRecipe(id,onlyMissing){const r=store[id];if(!r)return;try{await ensure(r)}catch(e){toast('Could not load ingredients. Check your internet.');return}
+ let n=0;r.ingredients.forEach((g,i)=>{if(onlyMissing&&lastIn.some(x=>x.includes(norm(g))||norm(g).includes(x)))return;const k=norm(g);if(cart[k])cart[k].count++;else cart[k]={name:g,qty:r.qty[i]||'As needed',count:1};n++});
+ ls.set('fv_cart',cart);badge();toast(n?`Added ${n} item(s) to cart`:'Nothing to add');if(location.hash==='#cart')renderCart()}
+const addMany=ids=>Promise.all(ids.map(i=>addRecipe(i)));
+const badge=()=>{const n=Object.keys(cart).length;$('cartN').textContent=n||''};
+const cartText=()=>'FOODVERSE SHOPPING LIST\n'+Object.values(cart).map(x=>`- ${x.qty} ${x.name}`).join('\n');
+function renderCart(){const it=Object.entries(cart);$('cartOutput').innerHTML=it.length?it.map(([k,x])=>`<div class="listrow"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.qty)} · for ${x.count} recipe(s)</div></div><div class="toolbar" style="margin:0;gap:5px">${pb('blinkit','Blinkit',x.name)}${pb('zepto','Zepto',x.name)}${pb('insta','Instamart',x.name)}${pb('bigbasket','BigBasket',x.name)}<button class="small" onclick="removeCart('${esc(k)}')">Remove</button></div></div>`).join('')+'<div class="toolbar"><button class="primary" onclick="exportCart()">Download list</button><button class="ghost" onclick="copyCart()">Copy list</button><button class="ghost" onclick="shareCart()">Share on WhatsApp</button></div>':'<div class="empty">Your grocery cart is empty.<br>Add ingredients from any recipe.</div>'}
+function removeCart(k){delete cart[k];ls.set('fv_cart',cart);badge();renderCart()}
+function exportCart(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([cartText()],{type:'text/plain'}));a.download='foodverse-shopping-list.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function copyCart(){try{await navigator.clipboard.writeText(cartText());toast('Shopping list copied')}catch(e){toast('Copy not allowed here. Use Download instead.')}}
+function shareCart(){const a=document.createElement('a');a.href='https://wa.me/?text='+q(cartText());a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove()}
+function fillCompare(){const s=$('compareFood');if(!s.options.length){s.innerHTML=starter.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');$('onlinePrice').value=starter[0].online}}
+function compare(){const r=store[$('compareFood').value]||starter[0],p=Math.max(0,Number($('onlinePrice').value)||0),s=p-r.home;
+ $('compareOutput').innerHTML=`<div class="nutri"><div><b>₹${r.home}</b><span>Home estimate</span></div><div><b>₹${p}</b><span>Online price</span></div><div><b>₹${Math.abs(s)}</b><span>${s>=0?'You save':'Extra home cost'}</span></div><div><b>${p?Math.round(Math.abs(s)/p*100):0}%</b><span>Difference</span></div></div><p class="price darkprice">${s>=0?`You could save about ₹${s} by cooking ${esc(r.name)} at home.`:'The online price you entered is lower than the home estimate.'}</p><div class="toolbar">${pb('swiggy','Order on Swiggy',r.name,'primary')}${pb('zomato','Order on Zomato',r.name,'primary')}<button class="ghost" onclick="openRecipe('${r.id}')">Cook at home</button></div><p class="notice">Enter the current price from the app you use. FOODVERSE does not read live prices.</p>`}
+function makePlan(){const d=$('diet').value;let pool=starter.filter(r=>d==='all'||(d==='veg'&&r.diet!=='nonveg')||(d==='vegan'&&r.diet==='vegan')||(d==='nonveg'&&r.diet==='nonveg'));if($('calorie').value==='light'){const l=pool.filter(r=>r.kcal<=450);if(l.length)pool=l}if(!pool.length)pool=starter;
+ const used=[],pick=m=>{let c=pool.filter(r=>r.meal===m&&!used.includes(r.id));if(!c.length)c=pool.filter(r=>!used.includes(r.id));if(!c.length)c=pool;const r=c[(Math.random()*c.length)|0];used.push(r.id);return r};
+ const plan=['Breakfast','Lunch','Snack','Lunch'].map(pick),u=[...new Map(plan.map(x=>[x.id,x])).values()],t=['kcal','protein','carbs','fat'].map(k=>u.reduce((a,r)=>a+(r[k]||0),0)),H=u.reduce((a,r)=>a+r.home,0),O=u.reduce((a,r)=>a+r.online,0);
+ $('planOutput').innerHTML=`<div class="panel"><h3>Your suggested plan</h3><p class="muted">Breakfast: ${esc(plan[0].name)} · Lunch: ${esc(plan[1].name)} · Snack: ${esc(plan[2].name)} · Dinner: ${esc(plan[3].name)}</p><div class="nutri"><div><b>${t[0]}</b><span>Calories kcal</span></div><div><b>${t[1]}g</b><span>Protein</span></div><div><b>${t[2]}g</b><span>Carbs</span></div><div><b>${t[3]}g</b><span>Fat</span></div></div><p class="price darkprice">Cook at home ₹${H} vs order online ₹${O}. You saved ₹${O-H} (${Math.round((O-H)*100/O)}%) by cooking at home.</p><p class="notice">Based on sample portions. Not personal medical advice.</p><button class="primary" onclick="addMany([${u.map(r=>`'${r.id}'`).join(',')}])">Add plan ingredients to cart</button></div><div class="grid" style="margin-top:14px">${u.map(foodCard).join('')}</div>`}
+function matchIngredients(){lastIn=norm($('ingredients').value.replace(/\n/g,',')).split(/,+/).map(s=>s.trim()).filter(Boolean);if(!lastIn.length){$('makerOutput').innerHTML='<div class="empty">Enter ingredients first.</div>';return}
+ const has=g=>lastIn.some(i=>i.includes(norm(g))||norm(g).includes(i));
+ let f=starter.map(r=>({r,have:r.ingredients.filter(has),missing:r.ingredients.filter(g=>!has(g))})).filter(x=>x.have.length);if($('healthyOnly').checked)f=f.filter(x=>x.r.kcal<=450);
+ f.sort((a,b)=>b.have.length/b.r.ingredients.length-a.have.length/a.r.ingredients.length);
+ $('makerOutput').innerHTML=(f.length?`<h3>Recipes you can make</h3><div class="grid">${f.map(x=>`<article class="panel"><h3>${esc(x.r.name)}</h3><p><b>${x.have.length}/${x.r.ingredients.length}</b> ingredients matched · ${x.r.kcal} kcal</p><div class="tags">${x.have.map(g=>`<span class="tag">✓ ${esc(g)}</span>`).join('')}</div>${x.missing.length?`<p class="muted">Still needed: ${x.missing.map(esc).join(', ')}</p>`:'<p>✅ You have everything!</p>'}<div class="actions"><button class="primary" onclick="openRecipe('${x.r.id}')">Steps</button>${x.missing.length?`<button class="ghost" onclick="addRecipe('${x.r.id}',true)">＋ Missing</button>`:''}<button class="ghost" onclick="openRecipe('${x.r.id}','order')">🛵 Order</button></div></article>`).join('')}</div>`:'<div class="empty">No starter recipe matches. Try the online search below.</div>')+idea()+`<div class="toolbar"><button class="ghost" onclick="onlineByIng()">Find online recipes with "${esc(lastIn[0])}"</button></div><div class="grid" id="onlineIng"></div>`}
+async function onlineByIng(){const o=$('onlineIng');o.innerHTML='<div class="loading">Searching…</div>';try{const r=await fetch(`${API}filter.php?i=${q(lastIn[0].replace(/ +/g,'_'))}`);if(!r.ok)throw 0;const d=await r.json();const l=(d.meals||[]).slice(0,12).map(mealToRecipe);o.innerHTML=l.length?l.map(foodCard).join(''):'<div class="empty" style="grid-column:1/-1">No online recipes found for that ingredient.</div>'}catch(e){o.innerHTML='<div class="empty" style="grid-column:1/-1">Online recipes are unavailable right now. Check your internet.</div>'}}
+async function searchOnline(qs){const st=$('apiStatus');st.textContent='Loading real food photos and recipes…';$('discoverGrid').innerHTML='<div class="loading">Loading food gallery…</div>';
+ try{const cat=$('category').value,cu=$('cuisine').value;let url=qs?`${API}search.php?s=${q(qs)}`:cat?`${API}filter.php?c=${q(cat)}`:cu?`${API}filter.php?a=${q(cu)}`:`${API}search.php?f=a`;
+  const res=await fetch(url);if(!res.ok)throw 0;const d=await res.json(),on=(d.meals||[]).map(mealToRecipe);
+  const local=starter.filter(r=>(!qs||norm(r.name).includes(norm(qs)))&&(!cat||norm(r.meal)===norm(cat)||norm(r.diet)===norm(cat))&&(!cu||cu==='Indian'));
+  letterIndex=0;renderDiscover([...local,...on]);st.textContent=on.length?`Showing ${on.length} online recipes plus ${local.length} home recipes.`:'No online matches. Try another name or category.'}
+ catch(e){renderDiscover(starter);st.textContent='Online recipe service unavailable. Showing built-in recipes. Check your internet and try again.'}}
+async function loadMore(){if(loadingMore)return;loadingMore=true;const b=$('loadMore');b.disabled=true;b.textContent='Loading…';
+ try{let add=[];const ids=new Set(shown.map(r=>r.id));for(let t=0;t<26&&!add.length;t++){const l='abcdefghijklmnopqrstuvwxyz'[letterIndex++%26];const r=await fetch(`${API}search.php?f=${l}`);if(!r.ok)continue;const d=await r.json();add=(d.meals||[]).map(mealToRecipe).filter(x=>!ids.has(x.id))}
+  renderDiscover([...shown,...add]);$('apiStatus').textContent=add.length?`Added ${add.length} more recipes.`:'No more new recipes in this batch.'}
+ catch(e){$('apiStatus').textContent='Could not load more. Check your internet connection.'}
+ finally{loadingMore=false;b.disabled=false;b.textContent='Load more recipes ↓'}}
+function calcHealth(){const a=+$('hAge').value,ht=+$('hH').value,w=+$('hW').value;
+ if(!(a>=5&&a<=110&&ht>=80&&ht<=250&&w>=15&&w<=300)){$('hOut').innerHTML='<div class="empty">Please enter realistic age, height and weight.</div>';return}
+ const bmi=w/((ht/100)**2),bmr=10*w+6.25*ht-5*a+($('hG').value==='m'?5:-161),t=Math.round(bmr*+$('hA').value+{lose:-400,keep:0,gain:300}[$('hGoal').value]),cat=bmi<18.5?'Underweight':bmi<25?'Healthy range':bmi<30?'Overweight':'Obese range';
+ $('hOut').innerHTML=`<div class="nutri"><div><b>${bmi.toFixed(1)}</b><span>BMI · ${cat}</span></div><div><b>${t}</b><span>kcal per day</span></div><div><b>${Math.round(t*.25/4)}g</b><span>Protein</span></div><div><b>${Math.round(t*.5/4)}g</b><span>Carbs</span></div></div><p class="muted">Fat about ${Math.round(t*.25/9)}g. Split used: 25% protein, 50% carbs, 25% fat.</p><p class="notice">General estimate only, not medical advice. Consult a doctor or dietitian for health conditions.</p><button class="primary" onclick="showView('planner')">Go to meal planner</button>`}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+const applyTheme=t=>{document.documentElement.dataset.theme=t;$('themeBtn').textContent=t==='dark'?'☀':'☾';ls.set('fv_theme',t)};
+$('themeBtn').onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+applyTheme(ls.get('fv_theme','light'));
+$('closeDialog').onclick=()=>dlg().close();
+dlg().addEventListener('close',()=>{if(history.state&&history.state.d)history.back()});
+window.addEventListener('popstate',()=>{if(dlg().open)dlg().close()});
+window.addEventListener('hashchange',route);
+$('clearCart').onclick=()=>{cart={};ls.set('fv_cart',cart);badge();renderCart()};
+$('compareBtn').onclick=compare;$('compareFood').onchange=()=>{$('onlinePrice').value=(store[$('compareFood').value]||starter[0]).online;compare()};
+$('makePlan').onclick=makePlan;$('createFood').onclick=matchIngredients;$('hBtn').onclick=calcHealth;$('loadMore').onclick=loadMore;
+$('searchBtn').onclick=()=>searchOnline($('searchBox').value.trim());
+$('searchBox').addEventListener('keydown',e=>{if(e.key==='Enter')searchOnline($('searchBox').value.trim())});
+$('allBtn').onclick=()=>{$('category').value='';$('cuisine').value='';$('searchBox').value='';searchOnline('')};
+$('category').onchange=()=>{$('cuisine').value='';searchOnline($('searchBox').value.trim())};
+$('cuisine').onchange=()=>{$('category').value='';searchOnline($('searchBox').value.trim())};
+document.querySelectorAll('[data-cat]').forEach(b=>b.addEventListener('click',()=>{$('category').value=b.dataset.cat;$('cuisine').value='';$('searchBox').value='';searchOnline('')}));
+hydrate();fillCompare();renderFeatured();renderDiscover(starter);compare();calcHealth();badge();route();
+</script>
+</body></html>
